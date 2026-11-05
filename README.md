@@ -18,17 +18,26 @@
 - **多清晰度**：每条视频通常有 1920x1080 / 1280x720 / 640x360 / 480x270 四档，可指定 `--quality 1080` 或默认下最高清
 - **多视频推文**：一条推文多条视频时全部下载，可用 `--index N` 只下其中一条
 - **三种输入**：推文链接、推文 ID、`video.twimg.com` 直链都能直接下
-- **三种形态**：命令行版、Web 版（给 Hark 这类只能开浏览器的 AI 用）、MCP 版（给 Claude Code / Codex 等支持 MCP 的 AI 用），共用同一套解析引擎
+- **四种形态**：命令行版、桌面版（双击即用的 exe）、Web 版（给 Hark 这类只能开浏览器的 AI 用）、MCP 版（给 Claude Code / Codex 等支持 MCP 的 AI 用），共用同一套解析引擎
 
 ## 三种形态，任选其一
 
 | 形态 | 目录 | 适合谁 |
 |---|---|---|
 | 命令行版 | 根目录 `x-dl.py` | 想要单文件、双击或终端批量跑的人 |
+| 桌面版 | [`desktop/`](desktop/) | 想要图形界面、双击即用的人；可下载现成的 exe |
 | Web 版 | [`web/`](web/) | 想部署到自己服务器、手机电脑都能开的人；也是给 Hark 用的入口 |
 | MCP 版 | [`mcp/`](mcp/) | 想让其他 AI（Claude Code / Codex / Cursor 等支持 MCP 的客户端）直接调用的人：2 个工具 `x_parse / x_download`，配置见 [mcp/README.md](mcp/README.md) |
 
-三者共用同一套解析引擎，X 改版时只需更新引擎文件。
+四者共用同一套解析引擎，X 改版时只需更新引擎文件。
+
+## 下载 EXE（Windows，不用装 Python）
+
+直接从 [Releases](https://github.com/FuzzyLogic112/x-downloader/releases) 下载
+`推特视频下载器.exe`（每次推送都会自动重新构建并更新到 `latest`），双击就能用。
+自己打包也可以：双击 `desktop/打包成EXE.bat`，详见 [desktop/README.md](desktop/README.md)。
+
+<img src="assets/app-demo.png" width="720" alt="桌面版实测：粘贴链接后下载 3 条视频">
 
 ## 快速开始
 
@@ -55,6 +64,14 @@ python x-dl.py "https://x.com/xxx/status/1909697603010441580" --out D:\视频
 ```
 
 Windows 也可双击 `双击运行.bat`。产物命名：`x_<推文ID>_<序号>_<宽>x<高>.mp4`，另附 `x_<推文ID>.json` 元数据。
+
+### 桌面版
+
+```bash
+python desktop/x_app.py     # 已装 Python 时直接运行
+```
+
+Windows 也可以双击 `desktop/启动下载器.bat`，或直接用上面 Releases 里的 exe。详见 [desktop/README.md](desktop/README.md)。
 
 ### Web 版
 
@@ -93,9 +110,10 @@ codex mcp add x-downloader -- python3 "D:\x-downloader\mcp\x_mcp_server.py"
 .
 ├── x-dl.py            # 命令行版（单文件，解析 + 下载引擎）
 ├── 双击运行.bat        # Windows 双击启动命令行版
+├── desktop/           # 桌面版（tkinter 界面 + 打包成 exe 的脚本）
 ├── mcp/               # MCP 版（stdio 服务器 + 配置示例）
 ├── web/               # Web 版（零依赖 HTTP 服务）
-└── assets/            # README 配图（图标 / 命令行实测 / 原理图）
+└── assets/            # README 配图（图标 / 命令行实测 / 桌面版实测 / 原理图）
 ```
 
 ## 常见问题
