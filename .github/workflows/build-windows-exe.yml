@@ -1,0 +1,48 @@
+# 每次推送到 main（改动桌面版/引擎/本文件时）自动在 Windows 上编出 exe，
+# 上传为构建产物，并更新到 `latest` Release，供用户直接下载。
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'desktop/**'
+      - 'x-dl.py'
+      - '.github/workflows/build-windows-exe.yml'
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+      - name: Build EXE
+        working-directory: desktop
+        shell: pwsh
+        run: |
+          $icon = if (Test-Path icon.ico) { @('--icon', 'icon.ico') } else { @() }
+          pyinstaller --noconfirm --clean --onefile --windowed `
+            --name "推特视频下载器" @icon `
+            --add-data "..\x-dl.py;." x_app.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 推特视频下载器-windows
+          path: desktop/dist/推特视频下载器.exe
+      - name: Publish to latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: 最新构建
+          body: 自动构建的 Windows 可执行文件（每次推送更新）。下载后双击即用，不用装 Python。
+          files: desktop/dist/推特视频下载器.exe
