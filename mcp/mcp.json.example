@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "x-downloader": {
+      "command": "python3",
+      "args": ["REPLACE_WITH_ABSOLUTE_PATH/x_mcp_server.py"],
+      "env": {
+        "X_DOWNLOAD_DIR": "REPLACE_WITH_ABSOLUTE_PATH/x-downloads"
+      }
+    }
+  }
+}
